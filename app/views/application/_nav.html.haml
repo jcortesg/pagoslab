@@ -1,0 +1,17 @@
+%nav.navbar.navbar
+  .container
+    .navbar-header
+      %button.navbar-toggle.collapsed{ 'aria-controls': 'navbar',
+        'aria-expanded': 'false',
+        'data-target': '#navbar',
+        'data-toggle': 'collapse',
+        type: 'button' }
+
+      = content_tag :a, href: root_path, class: 'navbar-brand' do
+        = image_tag('logo.png', class: 'img-responsive logo')
+    #navbar.navbar-collapse.collapse
+      %ul.nav.navbar-nav.navbar-right
+        %li= link_to 'Home', root_path
+        %li= link_to 'Beneficios', features_path
+        %li= link_to 'Precios', pricing_path
+        %li= link_to 'Login', '#'
