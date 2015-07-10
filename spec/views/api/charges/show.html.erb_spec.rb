@@ -10,12 +10,12 @@ RSpec.describe "api/charges/show", type: :view do
     ))
   end
 
-  it "renders attributes in <p>" do
-    skip('JSON view / Pending test');
+  it "renders attributes in <JSON OBject>" do
     render
-    expect(rendered).to match(/1/)
-    expect(rendered).to match(/Currency/)
-    expect(rendered).to match(/Source/)
-    expect(rendered).to match(/Description/)
+    parsed_rendered = JSON.parse(rendered)
+    expect(parsed_rendered['amount']).to match(1)
+    expect(parsed_rendered['currency']).to match("usd")
+    expect(parsed_rendered['source']).to match("Source")
+    expect(parsed_rendered['description']).to match("Description")
   end
 end

@@ -1,5 +1,5 @@
 class Api::ChargesController < ApiController
-  before_action :set_api_charge, only: [:show, :edit, :update, :destroy]
+  before_action :set_api_charge, only: [:show, :destroy]
 
   # GET /api/charges
   # GET /api/charges.json
@@ -10,15 +10,13 @@ class Api::ChargesController < ApiController
   # GET /api/charges/1
   # GET /api/charges/1.json
   def show
-  end
-
-  # GET /api/charges/new
-  def new
-    @api_charge = Api::Charge.new
-  end
-
-  # GET /api/charges/1/edit
-  def edit
+    respond_to do |format|
+      if !@api_charge.nil?
+        format.json { render :show, status: :ok, location: @api_charge }
+      else
+        format.json { render :json => {}.to_json, :status => :not_found }
+      end
+    end
   end
 
   # POST /api/charges
@@ -28,25 +26,10 @@ class Api::ChargesController < ApiController
 
     respond_to do |format|
       if @api_charge.save
-        format.html { redirect_to @api_charge, notice: 'Charge was successfully created.' }
         format.json { render :show, status: :created, location: @api_charge }
       else
-        format.html { render :new }
-        format.json { render json: @api_charge.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /api/charges/1
-  # PATCH/PUT /api/charges/1.json
-  def update
-    respond_to do |format|
-      if @api_charge.update(api_charge_params)
-        format.html { redirect_to @api_charge, notice: 'Charge was successfully updated.' }
-        format.json { render :show, status: :ok, location: @api_charge }
-      else
-        format.html { render :edit }
-        format.json { render json: @api_charge.errors, status: :unprocessable_entity }
+        #format.json { render json, @api_charge.errors, status: :unprocessable_entity }
+        format.json { render :json => @api_charge.errors.to_json, :status => :unprocessable_entity }
       end
     end
   end
@@ -54,17 +37,20 @@ class Api::ChargesController < ApiController
   # DELETE /api/charges/1
   # DELETE /api/charges/1.json
   def destroy
-    @api_charge.destroy
     respond_to do |format|
-      format.html { redirect_to api_charges_url, notice: 'Charge was successfully destroyed.' }
-      format.json { head :no_content }
+      if !@api_charge.nil?
+        @api_charge.destroy
+        format.json { head :no_content }
+      else
+        format.json { render :json => {}.to_json, :status => :not_found }
+      end
     end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_api_charge
-      @api_charge = Api::Charge.find(params[:id])
+      @api_charge = Api::Charge.find_by_id(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

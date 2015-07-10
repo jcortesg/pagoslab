@@ -54,98 +54,36 @@ RSpec.describe Api::ChargesController, type: :controller do
     end
   end
 
-  # describe "GET #new" do
-  #  it "assigns a new api_charge as @api_charge" do
-  #    get :new, {}, valid_session
-  #    expect(assigns(:api_charge)).to be_a_new(Api::Charge)
-  #  end
-  #end
-
-  # describe "GET #edit" do
-  #   it "assigns the requested api_charge as @api_charge" do
-  #     charge = Api::Charge.create! valid_attributes
-  #     get :edit, {:id => charge.to_param}, valid_session
-  #     expect(assigns(:api_charge)).to eq(charge)
-  #   end
-  # end
-
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Api::Charge" do
         expect {
-          post :create, {:api_charge => valid_attributes}, valid_session
+          post :create, {:format => 'json', :api_charge => valid_attributes}, valid_session
         }.to change(Api::Charge, :count).by(1)
       end
 
       it "assigns a newly created api_charge as @api_charge" do
-        post :create, {:api_charge => valid_attributes}, valid_session
+        post :create, {:format => 'json', :api_charge => valid_attributes}, valid_session
         expect(assigns(:api_charge)).to be_a(Api::Charge)
         expect(assigns(:api_charge)).to be_persisted
       end
 
-      it "redirects to the created api_charge" do
-        post :create, {:api_charge => valid_attributes}, valid_session
-        expect(response).to redirect_to(Api::Charge.last)
+      it "not redirects to the created api_charge" do
+        post :create, {:api_charge => valid_attributes, :format => 'json'}, valid_session
+        expect(response).to_not redirect_to(Api::Charge.last)
       end
     end
 
     context "with invalid params" do
       it "assigns a newly created but unsaved api_charge as @api_charge" do
-        post :create, {:api_charge => invalid_attributes, format: 'json'}, valid_session
+        post :create, {:api_charge => invalid_attributes, :format => 'json'}, valid_session
         expect(assigns(:api_charge)).to be_a_new(Api::Charge)
       end
 
       it "re-renders the 'new' template" do
-        skip('Validate Error Response')
-        post :create, {:api_charge => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
-      end
-    end
-  end
-
-  describe "PUT #update" do
-    skip('PUT? Refactor');
-    context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
-
-      it "updates the requested api_charge" do
-        charge = Api::Charge.create! valid_attributes
-        put :update, {:id => charge.to_param, :api_charge => new_attributes}, valid_session
-        charge.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "assigns the requested api_charge as @api_charge" do
-        skip('Not support for method PUT ');
-        charge = Api::Charge.create! valid_attributes
-        put :update, {:id => charge.to_param, :api_charge => valid_attributes}, valid_session
-        expect(assigns(:api_charge)).to eq(charge)
-      end
-
-      it "redirects to the api_charge" do
-        skip('Not support for method PUT ');
-        charge = Api::Charge.create! valid_attributes
-        charge = Api::Charge.create! valid_attributes
-        put :update, {:id => charge.to_param, :api_charge => valid_attributes}, valid_session
-        expect(response).to redirect_to(charge)
-      end
-    end
-
-    context "with invalid params" do
-      it "assigns the api_charge as @api_charge" do
-        skip('Not support for method PUT ');
-        charge = Api::Charge.create! valid_attributes
-        put :update, {:id => charge.to_param, :api_charge => invalid_attributes}, valid_session
-        expect(assigns(:api_charge)).to eq(charge)
-      end
-
-      it "re-renders the 'edit' template" do
-        skip('Not support for method PUT ');
-        charge = Api::Charge.create! valid_attributes
-        put :update, {:id => charge.to_param, :api_charge => invalid_attributes}, valid_session
-        expect(response).to render_template("edit")
+        post :create, {:api_charge => invalid_attributes, :format => 'json'}, valid_session
+        parsed_response = JSON.parse(response.body)
+        expect(parsed_response['amount']).to eq(["can't be blank", "is not a number"])
       end
     end
   end
@@ -154,15 +92,14 @@ RSpec.describe Api::ChargesController, type: :controller do
     it "destroys the requested api_charge" do
       charge = Api::Charge.create! valid_attributes
       expect {
-        delete :destroy, {:id => charge.to_param}, valid_session
+        delete :destroy, {:id => charge.to_param, :format => 'json'}, valid_session
       }.to change(Api::Charge, :count).by(-1)
     end
 
     it "redirects to the api_charges list" do
-      skip('After redirect what happens?');
       charge = Api::Charge.create! valid_attributes
-      delete :destroy, {:id => charge.to_param}, valid_session
-      expect(response).to redirect_to(api_charges_url)
+      delete :destroy, {:id => charge.to_param, :format => 'json'}, valid_session
+      expect(response).to_not redirect_to(api_charges_url)
     end
   end
 
