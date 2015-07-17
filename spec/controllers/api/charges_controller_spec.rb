@@ -33,6 +33,11 @@ RSpec.describe Api::ChargesController, type: :controller do
     { amount: nil, currency: nil, source: nil, description: nil}
   }
 
+  before do
+    @account = Account.create!
+    @request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(@account.key, @account.secret)
+  end
+
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # Api::ChargesController. Be sure to keep this updated too.

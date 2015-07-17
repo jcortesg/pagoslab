@@ -29,4 +29,5 @@ RSpec.describe Api::Charge, type: :model do
     expect(build(:api_charge, source: nil)).to_not be_valid
   end
 
+
 end
