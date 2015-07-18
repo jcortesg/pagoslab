@@ -3,7 +3,12 @@ require 'rails_helper'
 RSpec.describe "Api::Charges", type: :request do
 
   before do
-    @account = Account.create!
+    @account = Account.create!(
+      name: 'My App',
+      description: 'My App Description',
+      phone: '5555555555',
+      website: 'http://www.myapp.com'
+    )
     @env = {}
     @env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(@account.key, @account.secret)
   end

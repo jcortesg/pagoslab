@@ -34,7 +34,12 @@ RSpec.describe Api::ChargesController, type: :controller do
   }
 
   before do
-    @account = Account.create!
+    @account = Account.create!(
+      name: 'My app',
+      description: 'My app Description',
+      phone: '5555555555',
+      website: 'http://www.myapp.com'
+    )
     @request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(@account.key, @account.secret)
   end
 
